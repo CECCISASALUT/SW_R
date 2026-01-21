@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack - Your Waste Journey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .card.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .nav-btn {
+            background: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .waste-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .waste-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .waste-item h3 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .impact-counter {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .counter-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .counter-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .quiz-option {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover {
+            border-color: #667eea;
+        }
+
+        .quiz-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .quiz-option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .tracker-input {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .tracker-input input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .tracker-input button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tracker-input button:hover {
+            background: #764ba2;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .footer-names {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .footer-name {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        footer p {
+            margin-top: 15px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌍 EcoTrack</h1>
+            <p class="tagline">Track Your Impact, Transform Your Waste</p>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" onclick="showPage('home')">Home</button>
+            <button class="nav-btn" onclick="showPage('guide')">Recycling Guide</button>
+            <button class="nav-btn" onclick="showPage('quiz')">Quiz</button>
+            <button class="nav-btn" onclick="showPage('tips')">Tips</button>
+        </nav>
+
+        <!-- HOME PAGE -->
+        <div id="home" class="card active">
+            <h2>Welcome to Your Waste Journey</h2>
+            <p style="margin: 20px 0; line-height: 1.6;">Every year, the world produces over 2 billion tons of waste. But here's the good news: you have the power to make a difference. EcoTrack helps you understand and improve your environmental footprint through education and awareness.</p>
+            
+            <h3 style="margin-top: 30px;">Quick Facts <span style="font-size: 0.6em; color: #999; font-weight: normal;">(rotating every 5 seconds)</span></h3>
+            <div id="factsContainer"></div>
+        </div>
+
+        <!-- RECYCLING GUIDE PAGE -->
+        <div id="guide" class="card">
+            <h2>What Goes Where?</h2>
+            <p style="margin: 20px 0;">Click on each category to learn more about what can and cannot be recycled.</p>
+
+            <div class="waste-item" onclick="toggleInfo(this)">
+                <h3>🟦 Paper & Cardboard</h3>
+                <div class="info" style="display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                    <p><strong>✅ YES:</strong> Newspapers, magazines, office paper, cardboard boxes, paper bags</p>
+                    <p style="margin-top: 8px;"><strong>❌ NO:</strong> Pizza boxes with grease, paper towels, tissues, waxed paper, shredded paper in bags</p>
+                    <p style="margin-top: 8px;"><strong>💡 Tip:</strong> Flatten cardboard boxes to save space and remove tape or staples.</p>
+                </div>
+            </div>
+
+            <div class="waste-item" onclick="toggleInfo(this)">
+                <h3>🟩 Glass</h3>
+                <div class="info" style="display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                    <p><strong>✅ YES:</strong> Bottles, jars (any color)</p>
+                    <p style="margin-top: 8px;"><strong>❌ NO:</strong> Light bulbs, mirrors, window glass, ceramics, drinking glasses</p>
+                    <p style="margin-top: 8px;"><strong>💡 Tip:</strong> Rinse containers and remove metal lids. Labels are okay to leave on.</p>
+                </div>
+            </div>
+
+            <div class="waste-item" onclick="toggleInfo(this)">
+                <h3>🟨 Plastic</h3>
+                <div class="info" style="display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                    <p><strong>✅ YES:</strong> Bottles (#1, #2), containers, jugs, rigid plastics</p>
+                    <p style="margin-top: 8px;"><strong>❌ NO:</strong> Plastic bags, styrofoam, straws, plastic wrap, disposable cutlery</p>
+                    <p style="margin-top: 8px;"><strong>💡 Tip:</strong> Check the number inside the recycling symbol. When in doubt, throw it out.</p>
+                </div>
+            </div>
+
+            <div class="waste-item" onclick="toggleInfo(this)">
+                <h3>🟧 Metal</h3>
+                <div class="info" style="display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                    <p><strong>✅ YES:</strong> Aluminum cans, tin cans, clean aluminum foil, metal lids</p>
+                    <p style="margin-top: 8px;"><strong>❌ NO:</strong> Aerosol cans with contents, paint cans, scrap metal, hangers</p>
+                    <p style="margin-top: 8px;"><strong>💡 Tip:</strong> Rinse food cans and crush aluminum cans to save space.</p>
+                </div>
+            </div>
+
+            <div class="waste-item" onclick="toggleInfo(this)">
+                <h3>🟥 Electronics</h3>
+                <div class="info" style="display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                    <p><strong>✅ YES:</strong> Computers, phones, tablets, batteries, cables</p>
+                    <p style="margin-top: 8px;"><strong>❌ NO:</strong> Don't throw in regular recycling!</p>
+                    <p style="margin-top: 8px;"><strong>💡 Tip:</strong> Take to special e-waste collection centers. Many contain toxic materials and valuable metals.</p>
+                </div>
+            </div>
+
+            <div class="waste-item" onclick="toggleInfo(this)">
+                <h3>🟫 Organic Waste</h3>
+                <div class="info" style="display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+                    <p><strong>✅ YES:</strong> Fruit/vegetable scraps, coffee grounds, eggshells, yard waste</p>
+                    <p style="margin-top: 8px;"><strong>❌ NO:</strong> Meat, dairy, oils, pet waste, diseased plants</p>
+                    <p style="margin-top: 8px;"><strong>💡 Tip:</strong> Start composting at home or find a local composting program.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ PAGE -->
+        <div id="quiz" class="card">
+            <h2>Test Your Knowledge</h2>
+            <p style="margin: 20px 0;">How much do you know about recycling? Take this quiz to find out!</p>
+
+            <div id="quizContainer">
+                <div class="quiz-question" id="q1">
+                    <h3 style="margin-bottom: 15px;">1. Can you recycle pizza boxes with grease on them?</h3>
+                    <div class="quiz-option" onclick="checkAnswer(this, false, 'q1')">Yes, always</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true, 'q1')">No, grease contaminates the recycling</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false, 'q1')">Only if you wash them first</div>
+                </div>
+
+                <div class="quiz-question" id="q2" style="margin-top: 30px;">
+                    <h3 style="margin-bottom: 15px;">2. What percentage of plastic ever made has been recycled?</h3>
+                    <div class="quiz-option" onclick="checkAnswer(this, false, 'q2')">50%</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false, 'q2')">30%</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true, 'q2')">Less than 10%</div>
+                </div>
+
+                <div class="quiz-question" id="q3" style="margin-top: 30px;">
+                    <h3 style="margin-bottom: 15px;">3. Which of these items takes the longest to decompose?</h3>
+                    <div class="quiz-option" onclick="checkAnswer(this, false, 'q3')">Aluminum can</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true, 'q3')">Glass bottle</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false, 'q3')">Plastic bag</div>
+                </div>
+            </div>
+
+            <div id="quizResult" style="display: none; margin-top: 30px; padding: 20px; background: #d4edda; border-radius: 10px; text-align: center;">
+                <h3 style="color: #155724;">Quiz Complete!</h3>
+                <p style="margin-top: 10px; color: #155724;">You got <span id="scoreDisplay"></span> out of 3 correct!</p>
+            </div>
+        </div>
+
+        <!-- TIPS PAGE -->
+        <div id="tips" class="card">
+            <h2>Practical Tips for Everyday Life</h2>
+            
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3>🛒 Reduce</h3>
+                    <p>Buy products with minimal packaging. Bring reusable bags, bottles, and containers. Choose quality over quantity.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>🔄 Reuse</h3>
+                    <p>Repair items instead of replacing them. Donate or sell things you no longer need. Get creative with upcycling projects.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>♻️ Recycle</h3>
+                    <p>Clean containers before recycling. Learn your local recycling rules. Keep recyclables separate from trash.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>🌱 Compost</h3>
+                    <p>Start a compost bin for food scraps. Use compost to enrich your garden soil. Reduce methane from landfills.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>💧 Conserve Water</h3>
+                    <p>Fix leaky faucets. Use dishwashers efficiently. Collect rainwater for plants.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>⚡ Save Energy</h3>
+                    <p>Switch to LED bulbs. Unplug devices when not in use. Use natural light when possible.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px;">Weekly Challenge</h3>
+            <div class="waste-item">
+                <h3>This Week: Zero Plastic Bags</h3>
+                <p>Try to go the entire week without using a single-use plastic bag. Bring reusable bags everywhere you go!</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-names">
+                <div class="footer-name">Maurizio Fabio Brandi</div>
+                <div class="footer-name">Pasquale Marco D'Onofrio</div>
+                <div class="footer-name">Davide Ciaburro</div>
+                <div class="footer-name">Simone D'Allestro</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let data = {
+            quizScore: 0,
+            quizAttempted: {}
+        };
+
+        const facts = [
+            { icon: '♻️', title: 'Plastic Takes 450 Years', text: 'A single plastic bottle can take up to 450 years to decompose in a landfill.' },
+            { icon: '📱', title: 'E-Waste is Growing', text: 'Only 17% of electronic waste is recycled globally, despite containing valuable materials.' },
+            { icon: '🥫', title: 'Aluminum is Infinitely Recyclable', text: 'Aluminum cans can be recycled endlessly without losing quality.' },
+            { icon: '🌍', title: 'Global Impact', text: 'Recycling one ton of paper saves 17 trees, 7,000 gallons of water, and 4,000 kilowatts of energy.' },
+            { icon: '🌊', title: 'Ocean Pollution Crisis', text: 'Every minute, one garbage truck of plastic is dumped into our oceans.' },
+            { icon: '💡', title: 'Energy Savings', text: 'Recycling one aluminum can saves enough energy to run a TV for 3 hours.' },
+            { icon: '🗑️', title: 'Landfill Reality', text: 'The average person generates 4.5 pounds of waste per day.' },
+            { icon: '🌳', title: 'Paper Production', text: 'Americans use 85 million tons of paper per year, about 680 pounds per person.' },
+            { icon: '🔋', title: 'Battery Impact', text: 'One recycled battery can prevent soil and water contamination from heavy metals.' },
+            { icon: '👕', title: 'Textile Waste', text: 'The fashion industry produces 10% of global carbon emissions, more than aviation and shipping combined.' }
+        ];
+
+        let currentFactIndex = 0;
+        let factInterval;
+
+        function displayFacts() {
+            const container = document.getElementById('factsContainer');
+            const factsToShow = 4;
+            container.innerHTML = '';
+            
+            for (let i = 0; i < factsToShow; i++) {
+                const factIndex = (currentFactIndex + i) % facts.length;
+                const fact = facts[factIndex];
+                const div = document.createElement('div');
+                div.className = 'waste-item';
+                div.style.opacity = '0';
+                div.innerHTML = `
+                    <h3>${fact.icon} ${fact.title}</h3>
+                    <p>${fact.text}</p>
+                `;
+                container.appendChild(div);
+                
+                setTimeout(() => {
+                    div.style.transition = 'opacity 0.5s';
+                    div.style.opacity = '1';
+                }, i * 100);
+            }
+        }
+
+        function rotateFacts() {
+            currentFactIndex = (currentFactIndex + 4) % facts.length;
+            displayFacts();
+        }
+
+        function startFactRotation() {
+            displayFacts();
+            factInterval = setInterval(rotateFacts, 5000);
+        }
+
+        function stopFactRotation() {
+            if (factInterval) {
+                clearInterval(factInterval);
+            }
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+
+            if (pageId === 'home') {
+                startFactRotation();
+            } else {
+                stopFactRotation();
+            }
+        }
+
+        function toggleInfo(element) {
+            const info = element.querySelector('.info');
+            info.style.display = info.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function checkAnswer(element, isCorrect, questionId) {
+            if (data.quizAttempted[questionId]) return;
+            
+            data.quizAttempted[questionId] = true;
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                data.quizScore++;
+            } else {
+                element.classList.add('wrong');
+                const options = document.querySelectorAll(`#${questionId} .quiz-option`);
+                options.forEach(opt => {
+                    if (opt.textContent.includes('No, grease') || 
+                        opt.textContent.includes('Less than 10%') || 
+                        opt.textContent.includes('Glass bottle')) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+
+            if (Object.keys(data.quizAttempted).length === 3) {
+                setTimeout(() => {
+                    document.getElementById('scoreDisplay').textContent = data.quizScore;
+                    document.getElementById('quizResult').style.display = 'block';
+                }, 500);
+            }
+        }
+
+        startFactRotation();
+    </script>
+</body>
+</html>
